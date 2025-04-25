@@ -2,6 +2,8 @@ version: "3.9"
 
 services:
   backend:
+    environment:
+      - DJANGO_SETTINGS_MODULE=una_health_api.settings
     build: .
     command: >
       sh -c "python manage.py migrate &&
