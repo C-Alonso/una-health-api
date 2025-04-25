@@ -25,7 +25,6 @@ class GlucoseReadingFilter(django_filters.FilterSet):
         fields = ['user_id', 'start', 'stop']
 
 
-# View for listing glucose readings with pagination and sorting
 class GlucoseReadingList(APIView):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = GlucoseReadingFilter
@@ -58,7 +57,6 @@ class GlucoseReadingList(APIView):
         return paginator.get_paginated_response(serializer.data)
 
 
-# View for retrieving a specific glucose reading by id
 class GlucoseReadingDetail(generics.RetrieveAPIView):
     queryset = GlucoseReading.objects.all()
     serializer_class = GlucoseReadingSerializer

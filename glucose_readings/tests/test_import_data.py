@@ -9,7 +9,6 @@ import tempfile
 
 class CommandTestCase(TestCase):
     def setUp(self):
-        # Create a user to associate with the glucose readings
         self.user = User.objects.create_user(username='testuser', password='testpassword')
         self.user_2 = User.objects.create_user(username='testuser_2', password='testpassword_2')
 
@@ -21,7 +20,6 @@ class CommandTestCase(TestCase):
         self.create_sample_csv('user_2.csv', self.user_2.id)
 
     def create_sample_csv(self, filename, user_id):
-        # Write sample CSV data for a user
         csv_data = "Glukose-Werte,Erstellt am,24-02-2021 12:12 UTC,Erstellt von,bbb\n"
         csv_data += "Gerät,Seriennummer,Gerätezeitstempel,Aufzeichnungstyp,Glukosewert-Verlauf mg/dL,Glukose-Scan mg/dL,Nicht numerisches schnellwirkendes Insulin,Schnellwirkendes Insulin (Einheiten),Nicht numerische Nahrungsdaten,Kohlenhydrate (Gramm),Kohlenhydrate (Portionen),Nicht numerisches Depotinsulin,Depotinsulin (Einheiten),Notizen,Glukose-Teststreifen mg/dL,Keton mmol/L,Mahlzeiteninsulin (Einheiten),Korrekturinsulin (Einheiten),Insulin-Änderung durch Anwender (Einheiten)\n"
         csv_data += f"120,2021-10-02 09:08:00\n"
@@ -32,12 +30,10 @@ class CommandTestCase(TestCase):
             f.write(csv_data)
 
     def test_import_glucose_readings(self):
-        # Run the import command for the directory containing the sample files
         call_command('import_glucose_readings', self.test_dir)
 
-        # Check that the GlucoseReading objects were created for both users
         readings = GlucoseReading.objects.filter(user=self.user_2)
-        self.assertEqual(readings.count(), 2)  # 2 readings for user_2
+        self.assertEqual(readings.count(), 2)
 
         # Clean up the temporary directory after the test
         for filename in os.listdir(self.test_dir):

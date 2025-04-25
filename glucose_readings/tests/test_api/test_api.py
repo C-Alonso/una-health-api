@@ -9,20 +9,17 @@ from datetime import datetime
 class GlucoseReadingApiTests(APITestCase):
 
     def setUp(self):
-        # Create users
         self.user1 = User.objects.create_user(username="user1", email="user1@example.com", password="password")
         self.user2 = User.objects.create_user(username="user2", email="user2@example.com", password="password")
 
-        # Create glucose readings for user1
         self.glucose1 = GlucoseReading.objects.create(user=self.user1, glucose_level=100,
                                                       reading_datetime=datetime(2021, 10, 10, 9, 0))
         self.glucose2 = GlucoseReading.objects.create(user=self.user1, glucose_level=150,
                                                       reading_datetime=datetime(2021, 10, 11, 9, 0))
         self.glucose3 = GlucoseReading.objects.create(user=self.user1, glucose_level=130,
                                                       reading_datetime=datetime(2021, 10, 12, 9,
-                                                                                0))  # New glucose reading
+                                                                                0))
 
-        # Create glucose readings for user2
         self.glucose4 = GlucoseReading.objects.create(user=self.user2, glucose_level=120,
                                                       reading_datetime=datetime(2021, 10, 10, 9, 0))
 
@@ -61,7 +58,6 @@ class GlucoseReadingApiTests(APITestCase):
         self.assertEqual(response.data['results'][1]['glucose_level'], 130)
 
     def test_glucose_reading_stop_filter(self):
-        # Test that readings are filtered by stop timestamp
         url = reverse('glucose-reading-list')
         stop_datetime = '2021-10-11T00:00:00Z'
         response = self.client.get(url, {'user_id': self.user1.id, 'stop': stop_datetime})
@@ -71,7 +67,6 @@ class GlucoseReadingApiTests(APITestCase):
         self.assertEqual(response.data['results'][0]['glucose_level'], 100)
 
     def test_glucose_reading_start_and_stop_filter(self):
-        # Test that readings are filtered by both start and stop timestamps
         url = reverse('glucose-reading-list')
         start_datetime = '2021-10-10T09:00:00Z'
         stop_datetime = '2021-10-11T00:00:00Z'
