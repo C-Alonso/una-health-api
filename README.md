@@ -170,6 +170,10 @@ This command imports glucose readings from CSV files into the database. The CSV 
     It imports the glucose readings for each user in the file, creating GlucoseReading objects in the database associated with the correct user.
 ---
 
+**TESTING**
+
+✅ To run the tests, simply run pytest in the backend container.
+
 ### Authentication
 Currently, no authentication is enforced on these endpoints. If you plan to restrict access later, consider using DRF's authentication classes.
 
