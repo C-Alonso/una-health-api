@@ -1,4 +1,5 @@
 from rest_framework import generics
+from rest_framework.exceptions import ValidationError
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import OrderingFilter
@@ -9,7 +10,7 @@ import django_filters
 
 
 class GlucoseReadingPagination(PageNumberPagination):
-    page_size = 2
+    page_size = 20
     page_size_query_param = 'page_size'
     max_page_size = 100
 
@@ -32,9 +33,15 @@ class GlucoseReadingList(APIView):
     ordering_fields = ['glucose_level', 'reading_datetime']
     ordering = ['reading_datetime']
 
-    def get(self, request, *args, **kwargs):
-        queryset = GlucoseReading.objects.all()
 
+    def get(self, request, *args, **kwargs):
+
+        user_id = self.request.query_params.get('user_id')
+
+        if not user_id:
+            raise ValidationError({"user_id": "This query parameter is required."})
+
+        queryset = GlucoseReading.objects.all()
         filter_backend = self.filter_backends[0]()
         queryset = filter_backend.filter_queryset(self.request, queryset, self)
 
